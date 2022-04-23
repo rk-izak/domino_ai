@@ -58,7 +58,8 @@ def ai_picker(ai_pieces, snake_pieces):
     snake_vals = [sum(x.count(val) for x in snake_pieces) for val in all_numbers]
     total_vals = [x + y for x, y in zip(ai_vals, snake_vals)]
     total_dict = dict(zip(all_numbers, total_vals))
-    scores = [[[(total_dict[ai_pieces[i][0]] + total_dict[ai_pieces[i][1]])], ai_pieces[i]] for i in range(0, len(ai_pieces))]
+    scores = [[[(total_dict[ai_pieces[i][0]] + total_dict[ai_pieces[i][1]])], ai_pieces[i]]
+              for i in range(0, len(ai_pieces))]
 
     n = 0
     while True:
@@ -179,8 +180,8 @@ while True:
                     snake[-1][1]):
                 print("Illegal move. Please try again.")
             elif int(move) < 0 and (
-                    player_set[abs(int(move)) - 1][0] != snake[0][0] and player_set[abs(int(move)) - 1][1] != snake[0][
-                0]):
+                    player_set[abs(int(move)) - 1][0] != snake[0][0]
+                    and player_set[abs(int(move)) - 1][1] != snake[0][0]):
                 print("Illegal move. Please try again.")
 
             else:
