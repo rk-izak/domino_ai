@@ -61,6 +61,8 @@ def ai_picker(ai_pieces, snake_pieces):
     scores = [[[(total_dict[ai_pieces[i][0]] + total_dict[ai_pieces[i][1]])], ai_pieces[i]]
               for i in range(0, len(ai_pieces))]
 
+    scores.sort(reverse=True)
+
     n = 0
     while True:
         best = scores[n][1]
@@ -75,6 +77,9 @@ def ai_picker(ai_pieces, snake_pieces):
             break
         n += 1
     return best_move
+
+
+
 
 
 while True:
