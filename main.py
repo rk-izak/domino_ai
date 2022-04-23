@@ -79,7 +79,60 @@ def ai_picker(ai_pieces, snake_pieces):
     return best_move
 
 
+def move_maker(p_s, f_s, s_s, pos_v, stat):
+    if stat == 'computer':
+        input("\nStatus: Computer is about to make a move. Press Enter to continue...\n")
+    elif stat == 'player':
+        print("\nStatus: It's your turn to make a move. Enter your command.")
 
+    while True:
+        if stat == 'computer':
+            m_v = ai_picker(p_s, s_s)
+        elif stat == 'player':
+            m_v = input()
+
+        if str(m_v) not in [str(i) for i in range(-len(p_s), len(p_s) + 1)]:
+            print("Invalid input. Please try again.")
+        elif int(m_v) > 0 and (p_s[abs(int(m_v)) - 1][0] != s_s[-1][1]
+                               and p_s[abs(int(m_v)) - 1][1] != s_s[-1][1]):
+            print("Illegal move. Please try again.")
+        elif int(m_v) < 0 and (p_s[abs(int(m_v)) - 1][0] != s_s[0][0] and p_s[abs(int(m_v)) - 1][1] != s_s[0][0]):
+            print("Illegal move. Please try again.")
+
+        else:
+            m_v = int(m_v)
+            if m_v > 0:
+                if p_s[abs(int(m_v)) - 1][0] == s_s[-1][1]:
+                    m_v = p_s[abs(m_v) - 1]
+                    s_s.extend([m_v])
+                    p_s = [item for item in p_s if item != m_v]
+                    pos_v += 1
+                elif p_s[abs(int(m_v)) - 1][1] == s_s[-1][1]:
+                    m_v = p_s[abs(m_v) - 1]
+                    m_v.reverse()
+                    s_s.extend([m_v])
+                    p_s = [item for item in p_s if item != m_v]
+                    pos_v += 1
+            elif m_v < 0:
+                if p_s[abs(int(m_v)) - 1][1] == s_s[0][0]:
+                    m_v = p_s[abs(m_v) - 1]
+                    s_s[0:0] = [m_v]
+                    p_s = [item for item in p_s if item != m_v]
+                    pos_v += 1
+                elif p_s[abs(int(m_v)) - 1][0] == s_s[0][0]:
+                    m_v = p_s[abs(m_v) - 1]
+                    m_v.reverse()
+                    s_s[0:0] = [m_v]
+                    p_s = [item for item in p_s if item != m_v]
+                    pos_v += 1
+            elif m_v == 0:
+                if len(f_s) > 0:
+                    p_s[0:0] = [random.choice(f_s)]
+                    f_s = [item for item in f_s if item not in p_s]
+                else:
+                    pass
+            break
+    return p_s, f_s, s_s, pos_v
 
 
 while True:
@@ -100,6 +153,7 @@ while True:
 
 pos = 0
 snake = [snake]
+
 while True:
     print("======================================================================")
     print("Stock size:", len(full_set))
@@ -123,105 +177,10 @@ while True:
         break
 
     if status == 'computer':
-        input("\nStatus: Computer is about to make a move. Press Enter to continue...\n")
-        while True:
-            move = ai_picker(computer_set, snake)
-            if int(move) > 0 and (
-                    computer_set[abs(int(move)) - 1][0] != snake[-1][1] and computer_set[abs(int(move)) - 1][1] !=
-                    snake[-1][1]):
-                move = move
-            elif int(move) < 0 and (
-                    computer_set[abs(int(move)) - 1][0] != snake[0][0] and computer_set[abs(int(move)) - 1][1] !=
-                    snake[0][0]):
-                move = move
-            else:
-                move = int(move)
-                if move > 0:
-                    if computer_set[abs(int(move)) - 1][0] == snake[-1][1]:
-                        move = computer_set[abs(move) - 1]
-                        snake.extend([move])
-                        computer_set = [item for item in computer_set if item != move]
-                        pos += 1
-                    elif computer_set[abs(int(move)) - 1][1] == snake[-1][1]:
-                        move = computer_set[abs(move) - 1]
-                        move.reverse()
-                        snake.extend([move])
-                        computer_set = [item for item in computer_set if item != move]
-                        pos += 1
-                elif move < 0:
-                    if computer_set[abs(int(move)) - 1][1] == snake[0][0]:
-                        move = computer_set[abs(move) - 1]
-                        snake[0:0] = [move]
-                        computer_set = [item for item in computer_set if item != move]
-                        pos += 1
-                    elif computer_set[abs(int(move)) - 1][0] == snake[0][0]:
-                        move = computer_set[abs(move) - 1]
-                        move.reverse()
-                        snake[0:0] = [move]
-                        computer_set = [item for item in computer_set if item != move]
-                        pos += 1
-                elif move == 0:
-                    if len(full_set) > 0:
-                        computer_set[0:0] = [random.choice(full_set)]
-                        full_set = [item for item in full_set if item not in computer_set]
-                    else:
-                        pass
-                break
-
-
-
-
-
+        computer_set, full_set, snake, pos = move_maker(computer_set, full_set, snake, pos, status)
 
     elif status == 'player':
-        print("\nStatus: It's your turn to make a move. Enter your command.")
-
-        while True:
-            move = input()
-            if str(move) not in [str(i) for i in range(-len(player_set) - 1, len(player_set) + 1)]:
-                print("Invalid input. Please try again.")
-            elif int(move) > 0 and (
-                    player_set[abs(int(move)) - 1][0] != snake[-1][1] and player_set[abs(int(move)) - 1][1] !=
-                    snake[-1][1]):
-                print("Illegal move. Please try again.")
-            elif int(move) < 0 and (
-                    player_set[abs(int(move)) - 1][0] != snake[0][0]
-                    and player_set[abs(int(move)) - 1][1] != snake[0][0]):
-                print("Illegal move. Please try again.")
-
-            else:
-                move = int(move)
-                if move > 0:
-                    if player_set[abs(int(move)) - 1][0] == snake[-1][1]:
-                        move = player_set[abs(move) - 1]
-                        snake.extend([move])
-                        player_set = [item for item in player_set if item != move]
-                        pos += 1
-                    elif player_set[abs(int(move)) - 1][1] == snake[-1][1]:
-                        move = player_set[abs(move) - 1]
-                        move.reverse()
-                        snake.extend([move])
-                        player_set = [item for item in player_set if item != move]
-                        pos += 1
-                elif move < 0:
-                    if player_set[abs(int(move)) - 1][1] == snake[0][0]:
-                        move = player_set[abs(move) - 1]
-                        snake[0:0] = [move]
-                        player_set = [item for item in player_set if item != move]
-                        pos += 1
-                    elif player_set[abs(int(move)) - 1][0] == snake[0][0]:
-                        move = player_set[abs(move) - 1]
-                        move.reverse()
-                        snake[0:0] = [move]
-                        player_set = [item for item in player_set if item != move]
-                        pos += 1
-                elif move == 0:
-                    if len(full_set) > 0:
-                        player_set[0:0] = [random.choice(full_set)]
-                        full_set = [item for item in full_set if item not in player_set]
-                    else:
-                        pass
-                break
+        player_set, full_set, snake, pos = move_maker(player_set, full_set, snake, pos, status)
 
     if status == 'player':
         status = 'computer'
