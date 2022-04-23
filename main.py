@@ -62,7 +62,6 @@ def ai_picker(ai_pieces, snake_pieces):
               for i in range(0, len(ai_pieces))]
 
     scores.sort(reverse=True)
-
     n = 0
     while True:
         best = scores[n][1]
@@ -90,7 +89,6 @@ def move_maker(p_s, f_s, s_s, pos_v, stat):
             m_v = ai_picker(p_s, s_s)
         elif stat == 'player':
             m_v = input()
-
         if str(m_v) not in [str(i) for i in range(-len(p_s), len(p_s) + 1)]:
             print("Invalid input. Please try again.")
         elif int(m_v) > 0 and (p_s[abs(int(m_v)) - 1][0] != s_s[-1][1]
